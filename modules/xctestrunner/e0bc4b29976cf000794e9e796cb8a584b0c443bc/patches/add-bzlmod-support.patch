@@ -1,0 +1,48 @@
+From 4dc9c901d1be69e7301ca5dc1cb448cfc9dad0f7 Mon Sep 17 00:00:00 2001
+From: Patrick Balestra <patrickb@spotify.com>
+Date: Fri, 11 Nov 2022 14:02:51 +0100
+Subject: [PATCH] Add bzlmod support
+
+---
+ MODULE.bazel   | 11 +++++++++++
+ extensions.bzl | 10 ++++++++++
+ 2 files changed, 21 insertions(+)
+ create mode 100644 MODULE.bazel
+ create mode 100644 extensions.bzl
+
+diff --git a/MODULE.bazel b/MODULE.bazel
+new file mode 100644
+index 0000000..fa24a4f
+--- /dev/null
++++ b/MODULE.bazel
+@@ -0,0 +1,11 @@
++module(
++    name = "xctesrunner",
++    compatibility_level = 1,
++    version = "e0bc4b29976cf000794e9e796cb8a584b0c443bc",
++)
++non_module_deps = use_extension("//:extensions.bzl", "non_module_deps")
++
++use_repo(
++    non_module_deps,
++    "subpar",
++)
+diff --git a/extensions.bzl b/extensions.bzl
+new file mode 100644
+index 0000000..81aded8
+--- /dev/null
++++ b/extensions.bzl
+@@ -0,0 +1,10 @@
++load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
++
++def _non_module_deps_impl(_):
++	git_repository(
++	    name = "subpar",
++	    remote = "https://github.com/google/subpar",
++	    tag = "2.0.0",
++	)
++
++non_module_deps = module_extension(implementation = _non_module_deps_impl)
+-- 
+2.37.0 (Apple Git-136)
+

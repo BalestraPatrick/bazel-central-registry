@@ -1,0 +1,6 @@
+tasks:
+  verify_targets:
+    name: Verify build targets
+    platform: macos
+    build_targets:
+    - "@xctestrunner//:ios_test_runner"

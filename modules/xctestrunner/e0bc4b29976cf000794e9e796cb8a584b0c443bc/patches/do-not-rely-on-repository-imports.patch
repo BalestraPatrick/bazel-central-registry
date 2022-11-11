@@ -1,0 +1,174 @@
+From d7ba3f66a1c56d2ec60364e143bd19cc747b012a Mon Sep 17 00:00:00 2001
+From: Fabian Meumertzheim <fabian@meumertzhe.im>
+Date: Wed, 9 Nov 2022 13:46:11 +0100
+Subject: [PATCH] Do not rely on repository imports
+
+With Bzlmod, on disk ("canonical") repository names are an
+implementation detail and can thus no longer be used in Python imports.
+Instead, similar to non-Bazel Python projects, the import paths should
+be based on actual directories under the repo root - all repo roots are
+implicitly added to the Python path by Bazel.
+---
+ BUILD                                                  | 10 +++++-----
+ __init__.py => xctestrunner/__init__.py                |  0
+ {shared => xctestrunner/shared}/__init__.py            |  0
+ {shared => xctestrunner/shared}/bundle_util.py         |  0
+ {shared => xctestrunner/shared}/ios_constants.py       |  0
+ {shared => xctestrunner/shared}/ios_errors.py          |  0
+ {shared => xctestrunner/shared}/plist_util.py          |  0
+ .../shared}/provisioning_profile.py                    |  0
+ {shared => xctestrunner/shared}/version_util.py        |  0
+ {shared => xctestrunner/shared}/xcode_info_util.py     |  0
+ .../simulator_control}/__init__.py                     |  0
+ .../simulator_control}/simtype_profile.py              |  0
+ .../simulator_control}/simulator_util.py               |  0
+ {test_runner => xctestrunner/test_runner}/__init__.py  |  0
+ .../test_runner}/ios_test_runner.py                    |  0
+ .../test_runner}/logic_test_util.py                    |  0
+ .../test_runner}/runner_exit_codes.py                  |  0
+ .../test_runner}/xcodebuild_test_executor.py           |  0
+ .../test_runner}/xcresult_util.py                      |  0
+ .../test_runner}/xctest_session.py                     |  0
+ {test_runner => xctestrunner/test_runner}/xctestrun.py |  0
+ 21 files changed, 5 insertions(+), 5 deletions(-)
+ rename __init__.py => xctestrunner/__init__.py (100%)
+ rename {shared => xctestrunner/shared}/__init__.py (100%)
+ rename {shared => xctestrunner/shared}/bundle_util.py (100%)
+ rename {shared => xctestrunner/shared}/ios_constants.py (100%)
+ rename {shared => xctestrunner/shared}/ios_errors.py (100%)
+ rename {shared => xctestrunner/shared}/plist_util.py (100%)
+ rename {shared => xctestrunner/shared}/provisioning_profile.py (100%)
+ rename {shared => xctestrunner/shared}/version_util.py (100%)
+ rename {shared => xctestrunner/shared}/xcode_info_util.py (100%)
+ rename {simulator_control => xctestrunner/simulator_control}/__init__.py (100%)
+ rename {simulator_control => xctestrunner/simulator_control}/simtype_profile.py (100%)
+ rename {simulator_control => xctestrunner/simulator_control}/simulator_util.py (100%)
+ rename {test_runner => xctestrunner/test_runner}/__init__.py (100%)
+ rename {test_runner => xctestrunner/test_runner}/ios_test_runner.py (100%)
+ rename {test_runner => xctestrunner/test_runner}/logic_test_util.py (100%)
+ rename {test_runner => xctestrunner/test_runner}/runner_exit_codes.py (100%)
+ rename {test_runner => xctestrunner/test_runner}/xcodebuild_test_executor.py (100%)
+ rename {test_runner => xctestrunner/test_runner}/xcresult_util.py (100%)
+ rename {test_runner => xctestrunner/test_runner}/xctest_session.py (100%)
+ rename {test_runner => xctestrunner/test_runner}/xctestrun.py (100%)
+
+diff --git a/BUILD b/BUILD
+index f07ed62..f48da9c 100644
+--- a/BUILD
++++ b/BUILD
+@@ -4,12 +4,12 @@ load("@subpar//:subpar.bzl", "par_binary")
+ 
+ py_library(
+     name = "shared",
+-    srcs = glob(["shared/*.py"]),
++    srcs = glob(["xctestrunner/shared/*.py"]),
+ )
+ 
+ py_library(
+     name = "simulator",
+-    srcs = glob(["simulator_control/*.py"]),
++    srcs = glob(["xctestrunner/simulator_control/*.py"]),
+     deps = [
+         ":shared",
+     ],
+@@ -17,14 +17,14 @@ py_library(
+ 
+ par_binary(
+     name = "ios_test_runner",
+-    srcs = ["__init__.py"] + glob(
+-        ["test_runner/*.py"],
++    srcs = ["xctestrunner/__init__.py"] + glob(
++        ["xctestrunner/test_runner/*.py"],
+     ),
+     compiler_args = [
+         "--interpreter",
+         "/usr/bin/python3",
+     ],
+-    main = "test_runner/ios_test_runner.py",
++    main = "xctestrunner/test_runner/ios_test_runner.py",
+     python_version = "PY3",
+     deps = [
+         ":shared",
+diff --git a/__init__.py b/xctestrunner/__init__.py
+similarity index 100%
+rename from __init__.py
+rename to xctestrunner/__init__.py
+diff --git a/shared/__init__.py b/xctestrunner/shared/__init__.py
+similarity index 100%
+rename from shared/__init__.py
+rename to xctestrunner/shared/__init__.py
+diff --git a/shared/bundle_util.py b/xctestrunner/shared/bundle_util.py
+similarity index 100%
+rename from shared/bundle_util.py
+rename to xctestrunner/shared/bundle_util.py
+diff --git a/shared/ios_constants.py b/xctestrunner/shared/ios_constants.py
+similarity index 100%
+rename from shared/ios_constants.py
+rename to xctestrunner/shared/ios_constants.py
+diff --git a/shared/ios_errors.py b/xctestrunner/shared/ios_errors.py
+similarity index 100%
+rename from shared/ios_errors.py
+rename to xctestrunner/shared/ios_errors.py
+diff --git a/shared/plist_util.py b/xctestrunner/shared/plist_util.py
+similarity index 100%
+rename from shared/plist_util.py
+rename to xctestrunner/shared/plist_util.py
+diff --git a/shared/provisioning_profile.py b/xctestrunner/shared/provisioning_profile.py
+similarity index 100%
+rename from shared/provisioning_profile.py
+rename to xctestrunner/shared/provisioning_profile.py
+diff --git a/shared/version_util.py b/xctestrunner/shared/version_util.py
+similarity index 100%
+rename from shared/version_util.py
+rename to xctestrunner/shared/version_util.py
+diff --git a/shared/xcode_info_util.py b/xctestrunner/shared/xcode_info_util.py
+similarity index 100%
+rename from shared/xcode_info_util.py
+rename to xctestrunner/shared/xcode_info_util.py
+diff --git a/simulator_control/__init__.py b/xctestrunner/simulator_control/__init__.py
+similarity index 100%
+rename from simulator_control/__init__.py
+rename to xctestrunner/simulator_control/__init__.py
+diff --git a/simulator_control/simtype_profile.py b/xctestrunner/simulator_control/simtype_profile.py
+similarity index 100%
+rename from simulator_control/simtype_profile.py
+rename to xctestrunner/simulator_control/simtype_profile.py
+diff --git a/simulator_control/simulator_util.py b/xctestrunner/simulator_control/simulator_util.py
+similarity index 100%
+rename from simulator_control/simulator_util.py
+rename to xctestrunner/simulator_control/simulator_util.py
+diff --git a/test_runner/__init__.py b/xctestrunner/test_runner/__init__.py
+similarity index 100%
+rename from test_runner/__init__.py
+rename to xctestrunner/test_runner/__init__.py
+diff --git a/test_runner/ios_test_runner.py b/xctestrunner/test_runner/ios_test_runner.py
+similarity index 100%
+rename from test_runner/ios_test_runner.py
+rename to xctestrunner/test_runner/ios_test_runner.py
+diff --git a/test_runner/logic_test_util.py b/xctestrunner/test_runner/logic_test_util.py
+similarity index 100%
+rename from test_runner/logic_test_util.py
+rename to xctestrunner/test_runner/logic_test_util.py
+diff --git a/test_runner/runner_exit_codes.py b/xctestrunner/test_runner/runner_exit_codes.py
+similarity index 100%
+rename from test_runner/runner_exit_codes.py
+rename to xctestrunner/test_runner/runner_exit_codes.py
+diff --git a/test_runner/xcodebuild_test_executor.py b/xctestrunner/test_runner/xcodebuild_test_executor.py
+similarity index 100%
+rename from test_runner/xcodebuild_test_executor.py
+rename to xctestrunner/test_runner/xcodebuild_test_executor.py
+diff --git a/test_runner/xcresult_util.py b/xctestrunner/test_runner/xcresult_util.py
+similarity index 100%
+rename from test_runner/xcresult_util.py
+rename to xctestrunner/test_runner/xcresult_util.py
+diff --git a/test_runner/xctest_session.py b/xctestrunner/test_runner/xctest_session.py
+similarity index 100%
+rename from test_runner/xctest_session.py
+rename to xctestrunner/test_runner/xctest_session.py
+diff --git a/test_runner/xctestrun.py b/xctestrunner/test_runner/xctestrun.py
+similarity index 100%
+rename from test_runner/xctestrun.py
+rename to xctestrunner/test_runner/xctestrun.py
+-- 
+2.37.0 (Apple Git-136)
+

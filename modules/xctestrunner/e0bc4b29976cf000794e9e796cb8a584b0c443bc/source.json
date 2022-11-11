@@ -1,0 +1,9 @@
+{
+    "integrity": "sha256-bNFXrnUj0CTut+wFgRl56cGRWX8GGoAkQEE3ThDryhM=",
+    "patch_strip": 1,
+    "patches": {
+        "do-not-rely-on-repository-imports.patch": "sha256-ZcsQaI8ZVg4MukqA15zzNh5lP7kOrFWtJ4+j0lZFbH0=",
+        "add-bzlmod-support.patch": "sha256-i6vWTpJYNqg2cMfvWz9DFvLSC3C0b1w5ASAyjRKi3rU="
+    },
+    "url": "https://github.com/google/xctestrunner/archive/e0bc4b29976cf000794e9e796cb8a584b0c443bc.tar.gz"
+}

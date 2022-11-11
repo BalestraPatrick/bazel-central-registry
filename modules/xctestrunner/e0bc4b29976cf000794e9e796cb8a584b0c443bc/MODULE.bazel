@@ -1,0 +1,11 @@
+module(
+    name = "xctesrunner",
+    compatibility_level = 1,
+    version = "e0bc4b29976cf000794e9e796cb8a584b0c443bc",
+)
+non_module_deps = use_extension("//:extensions.bzl", "non_module_deps")
+
+use_repo(
+    non_module_deps,
+    "subpar",
+)
