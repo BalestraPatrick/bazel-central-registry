@@ -1,13 +1,20 @@
 {
     "homepage": "https://github.com/bazelbuild/rules_java",
     "maintainers": [],
-    "repository": [
-        "github:bazelbuild/rules_java"
-    ],
     "versions": [
         "4.0.0",
         "5.0.0",
-        "5.1.0"
+        "5.1.0",
+        "5.3.5",
+        "5.4.0",
+        "5.4.1",
+        "5.5.0",
+        "6.0.0",
+        "6.1.0",
+        "6.1.1"
     ],
-    "yanked_versions": {}
+    "yanked_versions": {},
+    "repository": [
+        "github:bazelbuild/rules_java"
+    ]
 }
