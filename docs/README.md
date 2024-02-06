@@ -9,12 +9,15 @@ To contribute a new module or a new version to an existing module, you can clone
 ```bash
 git clone https://github.com/bazelbuild/bazel-central-registry.git
 cd bazel-central-registry
-python3 ./tools/add_module.py
+bazel run //tools:add_module
 ```
 
 The script will generate all require changes based on your input, please review, modify and commit the change, then send a PR to the BCR repository.
 
 If you are the project owner, you can set up the [Publish to BCR](https://github.com/apps/publish-to-bcr) Github App for your repository to automatically send a PR to the BCR when cutting a new release.
+
+When manually editing files you may find `bazel run -- //tools:update_integrity foomod` useful to update the integrity hashes in foomod's source.json file.
+The tool also accepts a `--version` option to update the source.json of a specific version of the module (instead of latest).
 
 ## Presubmit
 
@@ -56,10 +59,12 @@ matrix:
   - ubuntu2004
   - macos
   - windows
+  bazel: [6.x, 7.x]
 tasks:
   verify_targets:
     name: Verify build targets
     platform: ${{ platform }}
+    bazel: ${{ bazel }}
     build_targets:
     - '@zlib//:zlib'
 ```
@@ -94,10 +99,12 @@ bcr_test_module:
     - ubuntu2004
     - macos
     - windows
+    bazel: [6.x, 7.x]
   tasks:
     run_test_module:
       name: Run test module
       platform: ${{ platform }}
+      bazel: ${{ bazel }}
       build_targets:
       - //java/src/com/github/rules_jvm_external/examples/bzlmod:bzlmod_example
 ```
@@ -127,7 +134,7 @@ For example, in `zlib`'s [metadata.json](https://github.com/bazelbuild/bazel-cen
 }
 ```
 
-A Bzlmod user's build will start to fail if the yanked version is in the resolved dependency graph, and the yanked reason will be presented in the error message. The user can choose to upgrade the dependency or they can bypass the check by specifying the `--allow_yanked_versions` flag or the `BZLMOD_ALLOW_YANKED_VERSIONS` environnement variable. Check [the documentation](https://bazel.build/reference/command-line-reference#flag--allow_yanked_versions) to learn how to use them.
+A Bzlmod user's build will start to fail if the yanked version is in the resolved dependency graph, and the yanked reason will be presented in the error message. The user can choose to upgrade the dependency or they can bypass the check by specifying the `--allow_yanked_versions` flag or the `BZLMOD_ALLOW_YANKED_VERSIONS` environment variable. Check [the documentation](https://bazel.build/reference/command-line-reference#flag--allow_yanked_versions) to learn how to use them.
 
 ## Versions format
 
